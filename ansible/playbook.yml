@@ -1,0 +1,70 @@
+---
+# - name: Update VM
+#   hosts: cp2-vm
+#   become: true
+#   tasks:
+#     - name: playbook.yml | Update all packages
+#       ansible.builtin.apt:
+#         name: "*"
+#         state: latest
+
+#     - name: playbook.yml | Install Podman
+#       ansible.builtin.apt:
+#         name: podman
+#         update_cache: true
+#         state: present
+
+- name: work on podman
+  hosts: cp2-vm
+  tasks:
+    - name: login acr
+      containers.podman.podman_login:
+        username: "{{ acr_user }}"
+        password: "{{ acr_pass }}"
+        registry: "{{ acr_registry }}"
+
+    - name: Descargar imágenes desde Docker Hub (repositorio público)
+      containers.podman.podman_image:
+        name: "docker.io/library/nginx"
+        tag: "latest"
+        state: present
+        pull: yes
+
+    - name: Etiquetar imágenes descargadas para ACR
+      containers.podman.podman_tag:
+        image: "docker.io/library/nginx:latest"
+        target_names: "{{ acr_registry }}/nginx:casopractico2"  # Usamos 'latest' para etiquetar
+        # push: no  # Solo etiquetamos, no subimos aún
+
+    - name: Subir imágenes a ACR
+      containers.podman.podman_image:
+        name: "{{ acr_registry }}/nginx:casopractico2"
+        # tag: "casopractico2"  # Usamos 'latest' para subir
+        push: true
+        validate_certs: false
+
+# - name: Launch webserver
+#   hosts: cp2-vm
+#   become: true
+#   tasks:
+#     - name: login acr
+#       containers.podman.podman_login:
+#         username: "{{ acr_user }}"
+#         password: "{{ acr_pass }}"
+#         registry: "{{ acr_registry }}"
+
+#     - name: Ejecutar nginx como contenedor en podman
+#       containers.podman.podman_container:
+#         name: webserver
+#         image: "{{ acr_registry }}/nginx:casopractico2"
+#         state: started
+#         ports:
+#           - "0.0.0.0:80:80"
+
+# - name: Deploy to AKS
+#   hosts: localhost
+#   # become: true
+#   vars:
+...
+ # buscar imagen de azure-vote-front
+ # crear fichero .kube/config

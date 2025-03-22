@@ -1,0 +1,6 @@
+.vscode
+terraform/.terraform
+terraform/.terraform.lock.hcl
+terraform/main.destroy.tfplan
+terraform/main.tfplan
+terraform/terraform.tfstate.backup
