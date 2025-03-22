@@ -1,0 +1,4 @@
+---
+# vars file for cp2-role
+
+acr_registry: "cp2acr.azurecr.io"

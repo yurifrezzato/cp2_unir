@@ -1,0 +1,15 @@
+---
+- name: cp2-role | tasks | launch_webserver.yml | Login acr
+  containers.podman.podman_login:
+    username: "{{ acr_user }}"
+    password: "{{ acr_pass }}"
+    registry: "{{ acr_registry }}"
+
+- name: cp2-role | tasks | launch_webserver.yml | Ejecutar nginx como contenedor en podman
+  containers.podman.podman_container:
+    name: webserver
+    image: "{{ acr_registry }}/nginx:casopractico2"
+    state: started
+    ports:
+      - "0.0.0.0:80:80"
+...

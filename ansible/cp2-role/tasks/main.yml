@@ -1,0 +1,15 @@
+---
+# tasks file for cp2-role
+
+- name: cp2-role | tasks | main.yml | Include prepare_vm.yml tasks
+  ansible.builtin.include_tasks:
+    file: prepare_vm.yml
+
+- name: cp2-role | tasks | main.yml | Include acr_images.yml tasks
+  ansible.builtin.include_tasks:
+    file: acr_images.yml
+
+- name: cp2-role | tasks | main.yml | Include launch_webserver.yml tasks
+  ansible.builtin.include_tasks:
+    file: launch_webserver.yml
+...

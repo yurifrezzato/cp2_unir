@@ -1,6 +1,8 @@
 .vscode
+ansible/secrets.yml
 terraform/.terraform
 terraform/.terraform.lock.hcl
 terraform/main.destroy.tfplan
+terraform/terraform.tfstate
 terraform/main.tfplan
 terraform/terraform.tfstate.backup

@@ -1,0 +1,12 @@
+---
+- name: cp2-role | tasks | prepare_vm.yml | Update all packages
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+
+- name: cp2-role | tasks | prepare_vm.yml | Install Podman
+  ansible.builtin.apt:
+    name: podman
+    update_cache: true
+    state: present
+...
