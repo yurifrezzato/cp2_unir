@@ -1,11 +1,5 @@
 ---
 # tasks file for app_deployment_role
-- name: cp2-role | tasks | acr_images.yml | Login acr
-  containers.podman.podman_login:
-    username: "{{ acr_user }}"
-    password: "{{ acr_pass }}"
-    registry: "{{ acr_registry }}"
-
 - name: app_deployment_role | tasks | main.yml | Se kubernetes config
   ansible.builtin.set_fact:
     kube_config: "/home/yfrezzato/.kube/kubeconfig"
