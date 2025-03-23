@@ -5,7 +5,7 @@
   vars_files:
     - secrets.yml
   tasks:
-    - name: playbook.yml | Include role
+    - name: playbook.yml | Include cp2-role role
       ansible.builtin.include_role:
         name: cp2-role
 
@@ -14,7 +14,7 @@
   vars_files:
     - secrets.yml
   tasks:
-    - name: playbook.yml | Include role
+    - name: playbook.yml | Include app_deployment_role role
       ansible.builtin.include_role:
         name: app_deployment_role
 ...

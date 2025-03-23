@@ -31,7 +31,7 @@
           spec:
             containers:
               - name: redis
-                image: cp2acr.azurecr.io/redis:casopractico2
+                image: cp2acr.azurecr.io/back/redis:casopractico2
                 ports:
                   - containerPort: 6379
                 env:
@@ -76,7 +76,7 @@
           spec:
             containers:
               - name: azure-vote-front
-                image: cp2acr.azurecr.io/azure-vote-front:casopractico2
+                image: cp2acr.azurecr.io/app/azure-vote-front:casopractico2
                 ports:
                   - containerPort: 80
                 env:

@@ -16,12 +16,12 @@
 - name: cp2-role | tasks | acr_images.yml | Tag images
   containers.podman.podman_tag:
     image: "{{ item.image_path }}:{{ item.tag }}"
-    target_names: "{{ acr_registry }}/{{ item.name }}:casopractico2"
+    target_names: "{{ acr_registry }}/{{ item.folder }}{{ item.name }}:casopractico2"
   loop: "{{ images }}"
 
 - name: cp2-role | tasks | acr_images.yml | Push images into ACR
   containers.podman.podman_image:
-    name: "{{ acr_registry }}/{{ item.name }}:casopractico2"
+    name: "{{ acr_registry }}/{{ item.folder }}/{{ item.name }}:casopractico2"
     push: true
     validate_certs: false
   loop: "{{ images }}"
