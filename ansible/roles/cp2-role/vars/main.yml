@@ -2,17 +2,35 @@
 # vars file for cp2-role
 
 acr_registry: "cp2acr.azurecr.io"
+podman_nginx_image: "nginx-custom"
+podman_nginx_folder: "front"
 
 images:
-  - name: "nginx"
-    folder: "front"
-    image_path: "docker.io/library/nginx"
+  - name: "{{ podman_nginx_image }}"
+    folder: "{{ podman_nginx_folder }}"
+    image_path: "localhost/nginx-custom"
     tag: "latest"
+    pull: false
   - name: "redis"
     folder: back
     image_path: "docker.io/bitnami/redis"
     tag: "6.0.8"
+    pull: true
   - name: "azure-vote-front"
     folder: app
     image_path: "docker.io/russo0405/azure-vote-front"
     tag: "v1"
+    pull: true
+
+create_dirs:
+  - "/opt/nginx/certificados"
+  - "/opt/nginx/htpasswd"
+  - "/opt/nginx/contenido-web"
+
+copy_files:
+  - src: "files/contenido-web/"
+    dest: "/opt/nginx/contenido-web/"
+  - src: "files/nginx.conf"
+    dest: "/opt/nginx/nginx.conf"
+  - src: "files/Dockerfile"
+    dest: "/opt/nginx/Dockerfile"

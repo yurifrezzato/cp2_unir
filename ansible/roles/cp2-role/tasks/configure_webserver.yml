@@ -1,0 +1,46 @@
+---
+- name: cp2-role | tasks | configure_webserver.yml | Download images
+  containers.podman.podman_image:
+    name: "docker.io/library/nginx"
+    tag: "latest"
+    state: present
+    pull: yes
+
+- name: cp2-role | tasks | configure_webserver.yml | Create needed dirs
+  ansible.builtin.file:
+    path: "{{ item.src }}"
+    state: directory
+  loop: "{{ files }}"
+
+- name: cp2-role | tasks | configure_webserver.yml | Create private key
+  community.crypto.openssl_privatekey:
+    path: /opt/nginx/certificados/nginx.key
+    type: RSA
+    size: 2048
+
+- name: cp2-role | tasks | configure_webserver.yml | Create selfsigned certificate
+  community.crypto.x509_certificate:
+    path: /opt/nginx/certificados/nginx.crt
+    privatekey_path: /opt/nginx/certificados/nginx.key
+    provider: selfsigned
+
+- name: cp2-role | tasks | configure_webserver.yml | Create htpasswd file
+  community.general.htpasswd:
+    path: /opt/nginx/htpasswd/.htpasswd
+    name: "yfrezzato" # definir en secret
+    password: "yfrezzato" # definir en secret
+    crypt_scheme: md5_crypt
+
+- name: cp2-role | tasks | configure_webserver.yml | Copi files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop: "{{ copy_files }}"
+
+- name: cp2-role | tasks | configure_webserver.yml | Build image
+  containers.podman.podman_image:
+    name: "{{ podman_nginx_image }}"
+    path: /opt/nginx
+    build:
+      format: docker
+...

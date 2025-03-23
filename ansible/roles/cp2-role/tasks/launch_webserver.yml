@@ -8,8 +8,9 @@
 - name: cp2-role | tasks | launch_webserver.yml | Execute nginx container
   containers.podman.podman_container:
     name: webserver
-    image: "{{ acr_registry }}/nginx:casopractico2"
+    image: "{{ acr_registry }}/{{ podman_nginx_folder }}/{{ podman_nginx_image }}:casopractico2"
     state: started
     ports:
-      - "0.0.0.0:80:80"
+      - "80:80"
+      - "443:443"
 ...

@@ -80,8 +80,6 @@ resource "azurerm_linux_virtual_machine" "vm" {
   location = azurerm_resource_group.rg.location
   size = "Standard_A1_v2"
   admin_username = "yfrezzato"
-  # admin_password = "Yfrezzaty-01"
-  # disable_password_authentication = false
   network_interface_ids = [
     azurerm_network_interface.nic.id
   ]
@@ -102,18 +100,6 @@ resource "azurerm_linux_virtual_machine" "vm" {
     username = "yfrezzato"
     public_key = file("~/.ssh/id_rsa.pub")
   }
-
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "ls -la /tmp",
-  #   ]
-
-  #   connection {
-  #     host = self.public_ip_address
-  #     user = self.admin_username
-  #     password = self.admin_password
-  #   }
-  # }
 }
 
 resource "azurerm_container_registry" "acr" {
@@ -122,11 +108,6 @@ resource "azurerm_container_registry" "acr" {
   location = azurerm_resource_group.rg.location
   sku = "Basic"
   admin_enabled = true
-  # georeplications {
-  #   location = "North Europe"
-  #   zone_redundancy_enabled = true
-  #   tags = {}
-  # }
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
