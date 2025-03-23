@@ -1,5 +1,5 @@
 ---
-- name: playbook.yml | Run cp2 Role
+- name: playbook.yml | Run cp2-role
   hosts: cp2-vm
   become: true
   vars_files:
@@ -8,6 +8,13 @@
     - name: playbook.yml | Include role
       ansible.builtin.include_role:
         name: cp2-role
+
+- name: playbook.yml | Run app_deployment_role
+  hosts: localhost
+  vars_files:
+    - secrets.yml
+  tasks:
+    - name: playbook.yml | Include role
+      ansible.builtin.include_role:
+        name: app_deployment_role
 ...
- # buscar imagen de azure-vote-front
- # crear fichero .kube/config

@@ -41,6 +41,17 @@ resource "azurerm_public_ip" "public_ip" {
 #     source_address_prefix = "*"
 #     destination_address_prefix = "*"
 #   }
+    # security_rule {
+    #   name = "Allow80"
+    #   priority = 1002
+    #   direction = "Inbound"
+    #   access = "Allow"
+    #   protocol = "Tcp"
+    #   source_port_range = "*"
+    #   destination_port_range = "80"
+    #   source_address_prefix = "*"
+    #   destination_address_prefix = "*"
+    # }
 # }
 
 resource "azurerm_network_interface" "nic" {
@@ -51,7 +62,7 @@ resource "azurerm_network_interface" "nic" {
   ip_configuration {
     name = "${var.prefix}-nic-configuration"
     subnet_id = azurerm_subnet.internal.id
-    private_ip_address_allocation = "Dynamic"
+    private_ip_address_allocation = "Static" #"Dynamic"
     private_ip_address = "10.0.1.5"
     public_ip_address_id = azurerm_public_ip.public_ip.id
   }
@@ -64,6 +75,7 @@ resource "azurerm_network_interface" "nic" {
 
 resource "azurerm_linux_virtual_machine" "vm" {
   name = "${var.prefix}-vm"
+  computer_name = "${var.prefix}-vm"
   resource_group_name = azurerm_resource_group.rg.name
   location = azurerm_resource_group.rg.location
   size = "Standard_A1_v2"
@@ -142,8 +154,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 resource "azurerm_role_assignment" "aks_acr_pull" {
   principal_id = azurerm_kubernetes_cluster.aks.identity[0].principal_id
-  role_definition_name = "AcrPush"
+  # role_definition_name = "AcrPush"
+  role_definition_name = "AcrPull"
   scope = azurerm_container_registry.acr.id
+  # skip_service_principal_aad_check = true
 }
 
 resource "kubernetes_storage_class" "azure-sc" {

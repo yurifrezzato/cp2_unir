@@ -1,4 +1,5 @@
 .vscode
+kubectl
 ansible/secrets.yml
 terraform/.terraform
 terraform/.terraform.lock.hcl

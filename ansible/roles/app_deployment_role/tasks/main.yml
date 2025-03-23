@@ -1,0 +1,102 @@
+---
+# tasks file for app_deployment_role
+- name: cp2-role | tasks | acr_images.yml | Login acr
+  containers.podman.podman_login:
+    username: "{{ acr_user }}"
+    password: "{{ acr_pass }}"
+    registry: "{{ acr_registry }}"
+
+- name: app_deployment_role | tasks | main.yml | Se kubernetes config
+  ansible.builtin.set_fact:
+    kube_config: "/home/yfrezzato/.kube/kubeconfig"
+
+- name: app_deployment_role | tasks | main.yml | Redis deployment
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kube_config }}"
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: redis
+        namespace: default
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: redis
+        template:
+          metadata:
+            labels:
+              app: redis
+          spec:
+            containers:
+              - name: redis
+                image: cp2acr.azurecr.io/redis:casopractico2
+                ports:
+                  - containerPort: 6379
+                env:
+                  - name: ALLOW_EMPTY_PASSWORD
+                    value: "yes"
+            imagePullSecrets:
+              - name: acr-secret
+
+- name: app_deployment_role | tasks | main.yml | Create Redis service
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kube_config }}"
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: redis
+        namespace: default
+      spec:
+        ports:
+          - port: 6379
+        selector:
+          app: redis
+
+- name: app_deployment_role | tasks | main.yml | azure-vote-front deployment
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kube_config }}"
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: azure-vote-front
+        namespace: default
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: azure-vote-front
+        template:
+          metadata:
+            labels:
+              app: azure-vote-front
+          spec:
+            containers:
+              - name: azure-vote-front
+                image: cp2acr.azurecr.io/azure-vote-front:casopractico2
+                ports:
+                  - containerPort: 80
+                env:
+                  - name: REDIS
+                    value: redis
+            imagePullSecrets:
+              - name: acr-secret
+
+- name: app_deployment_role | tasks | main.yml | Create azure-vote-front service
+  kubernetes.core.k8s:
+    kubeconfig: "{{ kube_config }}"
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: azure-vote-front
+        namespace: default
+      spec:
+        type: LoadBalancer
+        ports:
+          - port: 80
+        selector:
+          app: azure-vote-front

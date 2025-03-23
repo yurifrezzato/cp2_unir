@@ -1,0 +1,15 @@
+---
+# vars file for cp2-role
+
+acr_registry: "cp2acr.azurecr.io"
+
+images:
+  - name: "nginx"
+    image_path: "docker.io/library/nginx"
+    tag: "latest"
+  - name: "redis"
+    image_path: "docker.io/bitnami/redis"
+    tag: "6.0.8"
+  - name: "azure-vote-front"
+    image_path: "docker.io/russo0405/azure-vote-front"
+    tag: "v1"

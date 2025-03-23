@@ -21,3 +21,9 @@ output "acr_admin_password" {
   value       = azurerm_container_registry.acr.admin_password
   sensitive   = true  #
 }
+
+output "kube_config" {
+  value = azurerm_kubernetes_cluster.aks.kube_config_raw
+  description = "Configuration file to connect to kubernertes cluster"
+  sensitive = true
+}
